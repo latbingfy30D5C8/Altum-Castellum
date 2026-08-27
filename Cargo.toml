@@ -1,6 +1,10 @@
 [package]
 name = "altum-castellum-core"
 version = "0.1.0"
-edition = "2024"
+edition = "2026"
 
 [dependencies]
+arti-client = {version = "0.45.0", features = ["onion-service-service", "onion-service-client"]
+irc = "1.1.0"
+irc-proto = "1.1.0"
+socks = "0.3.4"
