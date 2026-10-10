@@ -1,0 +1,40 @@
+use super::*;
+
+#[test]
+#[ignore]
+fn client_builder() {
+    match ACClient::new() {
+        Ok(mut cli) => {
+            cli.tor.kill().unwrap();
+        }
+        Err(boxed_err) => {
+            panic!("fuck");
+        }
+    }
+}
+
+#[test]
+fn hex_conv() {
+    assert_eq!("0", u8_to_hex(0));
+    assert_eq!("1f", u8_to_hex(31));
+    assert_eq!("9b", u8_to_hex(155));
+    assert_eq!("5f", u8_to_hex(095));
+    assert_eq!("8c", u8_to_hex(140));
+    assert_eq!("84", u8_to_hex(132));
+    assert_eq!("80", u8_to_hex(128));
+    assert_eq!("f9", u8_to_hex(249));
+    assert_eq!("d9", u8_to_hex(217));
+    assert_eq!("ff", u8_to_hex(255));
+    assert_eq!("1", u8_to_hex(1));
+    assert_eq!("5", u8_to_hex(5));
+    assert_eq!("7", u8_to_hex(7));
+}
+
+#[test]
+#[should_panic]
+fn hex_conv2() {
+    assert_eq!("00", u8_to_hex(0));
+    assert_eq!("1f", u8_to_hex(31));
+    assert_eq!("ff", u8_to_hex(255));
+    assert_eq!("01", u8_to_hex(1));
+}
