@@ -7,6 +7,8 @@ use std::{
     path::PathBuf,
     process::{Child, Command},
 };
+
+use socks::Socks5Stream;
 #[cfg(test)]
 mod tests;
 mod tor;
@@ -16,12 +18,13 @@ type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 pub struct ACClient {
     tor: Child,
     tor_control: TcpStream,
-    onion_addr: Option<String>,
-    server: Option<TcpStream>,
+    onion_addr: String,
+    server: Socks5Stream,
 }
 
 impl ACClient {
-    pub fn new() -> Result<ACClient> {
+    // for anyone gong to debug this bulky shit, patience be with you.
+    pub fn new(irc_server_addr: &str) -> Result<ACClient> {
         let mut tor_subprcss = Command::new("tor/tor")
             .args(["--ControlPort", "9051", "--CookieAuthentication", "1"])
             .spawn()?;
@@ -65,11 +68,12 @@ impl ACClient {
             }
             // it should time out after a while, write it down!
         }
+        let ac_server_stream = socks::Socks5Stream::connect("127.0.0.1:9050", (irc_server_addr, 6667))?;
         Ok(ACClient {
             tor: tor_subprcss,
             tor_control: tor_control_stream,
-            onion_addr: None,
-            server: None,
+            onion_addr: irc_server_addr.into(),
+            server: ac_server_stream,
         })
     }
 }

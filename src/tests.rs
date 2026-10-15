@@ -1,19 +1,6 @@
 use super::*;
 
 #[test]
-#[ignore]
-fn client_builder() {
-    match ACClient::new() {
-        Ok(mut cli) => {
-            cli.tor.kill().unwrap();
-        }
-        Err(boxed_err) => {
-            panic!("fuck");
-        }
-    }
-}
-
-#[test]
 fn hex_conv() {
     assert_eq!("0", u8_to_hex(0));
     assert_eq!("1f", u8_to_hex(31));
@@ -37,4 +24,9 @@ fn hex_conv2() {
     assert_eq!("1f", u8_to_hex(31));
     assert_eq!("ff", u8_to_hex(255));
     assert_eq!("01", u8_to_hex(1));
+}
+
+#[test]
+fn socks5test () {
+    socks::Socks5Stream::connect("127.0.0.1:9050", "duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion:80").unwrap();
 }
