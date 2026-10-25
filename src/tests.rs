@@ -27,6 +27,10 @@ fn hex_conv2() {
 }
 
 #[test]
-fn socks5test () {
-    socks::Socks5Stream::connect("127.0.0.1:9050", "duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion:80").unwrap();
+fn socks5test() {
+    socks::Socks5Stream::connect(
+        "127.0.0.1:9050",
+        "duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion:80",
+    )
+    .unwrap();
 }
