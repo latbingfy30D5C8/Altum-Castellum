@@ -3,6 +3,7 @@ use std::{
     fs::File,
     io::{self, BufWriter, Write},
 };
+mod message;
 
 pub fn u8_to_hex(byte: u8) -> String {
     let mut hex = String::new();
