@@ -3,12 +3,13 @@
 use core::fmt;
 use std::error;
 
-// i hate this creation of mine
+use crate::message::MonosodiumGlutamate::ExpectedCRLF;
+
+// i hate this creation of mine // if you ever dare to ask me why the return type is an unnecessarily fucked up tuple, go fuck yourself.
 pub fn whatitmean(
     msg: &str,
 ) -> Result<(Option<&str>, &str, Option<[&str; 14]>, Option<&str>), MonosodiumGlutamate> {
-
-    // (prefix, command, parameters, trailing)  no tags 'cause why would i. max parameters is 14, with trailing 15. idk if some client can even send a message with 15 parameters without trailing, i hope this never happens.
+    // (prefix, command, parameters, trailing)  no tags 'cause why would i. max parameters is 14, with trailing 15. idk if some client can even send a message with 15 parameters without trailing, i hope this never happens. there is a chance it may panic, we'll see // parameter array making me sick, or the uni is idk whatever.
     let mut refined_and_rich_in_iode_salt: (Option<&str>, &str, Option<[&str; 14]>, Option<&str>) =
         (None, "", None, None); // what is the performance of a tuple compared to a struct I wonder // 29.10.2026 itibarıyla iyotlu rafine tuz sudan daha ucuz amınakoyim. tuz sudan nasıl daha ucuz olabilir amk ya, yani üretirken bile su harcanmıyomu amk sikm böyle işi
     let mut message = msg;
@@ -70,6 +71,14 @@ pub fn whatitmean(
             }
         }
     }
+}
+
+pub fn whatitmean_once(irc_message: &str) -> Result<((Option<&str>, &str, Option<[&str; 14]>, Option<&str>), &str), MonosodiumGlutamate> {
+    let splitted_irc_msg = match irc_message.split_once("\r\n") {
+        Some(m) => m,
+        None => return Err(ExpectedCRLF),
+    };
+    Ok((whatitmean(splitted_irc_msg.0)?, splitted_irc_msg.1))
 }
 
 // i make it mean less possible as. Praise me, the fool. Conscious wrong behavior and the self acceptance of it is the biggest sin. Can I down the wine now? fuck fuckcujc
