@@ -7,29 +7,28 @@ use std::error;
 pub fn whatitmean(
     msg: &str,
 ) -> Result<(Option<&str>, &str, Option<[&str; 14]>, Option<&str>), MonosodiumGlutamate> {
+
     // (prefix, command, parameters, trailing)  no tags 'cause why would i. max parameters is 14, with trailing 15. idk if some client can even send a message with 15 parameters without trailing, i hope this never happens.
     let mut refined_and_rich_in_iode_salt: (Option<&str>, &str, Option<[&str; 14]>, Option<&str>) =
         (None, "", None, None); // what is the performance of a tuple compared to a struct I wonder // 29.10.2026 itibarıyla iyotlu rafine tuz sudan daha ucuz amınakoyim. tuz sudan nasıl daha ucuz olabilir amk ya, yani üretirken bile su harcanmıyomu amk sikm böyle işi
-        let mut message = msg;
-        let mut nth_param = 0;
+    let mut message = msg;
     if msg.starts_with(':') {
         let Some(splitted_msg) = msg.split_once(' ') else {
             return Err(MonosodiumGlutamate::Bullshit);
         };
         message = splitted_msg.1;
         refined_and_rich_in_iode_salt.0 = Some(splitted_msg.0);
-        nth_param += 1;
     }
     let Some(splitted_msg) = message.split_once(' ') else {
         return Err(MonosodiumGlutamate::Bullshit);
     };
     message = splitted_msg.1;
     refined_and_rich_in_iode_salt.1 = splitted_msg.0;
-    nth_param += 1;
+    let mut nth_param = 0;
     loop {
         if message.starts_with(':') {
             if message.ends_with("\r\n") {
-                refined_and_rich_in_iode_salt.3 = Some(message);
+                refined_and_rich_in_iode_salt.3 = Some(message.trim_end());
                 return Ok(refined_and_rich_in_iode_salt);
             } else {
                 return Err(MonosodiumGlutamate::ExpectedCRLF);
@@ -59,7 +58,7 @@ pub fn whatitmean(
                 }
                 match &mut refined_and_rich_in_iode_salt.2 {
                     Some(m) => {
-                        m[nth_param] = "anan";
+                        m[nth_param] = message.trim_end();
                         return Ok(refined_and_rich_in_iode_salt);
                     }
                     None => {

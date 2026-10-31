@@ -27,6 +27,7 @@ fn hex_conv2() {
 }
 
 #[test]
+#[ignore]
 fn socks5test() {
     socks::Socks5Stream::connect(
         "127.0.0.1:9050",
@@ -38,7 +39,13 @@ fn socks5test() {
 #[test]
 fn msg_prcss_test() {
     use message::*;
-    let chinese_salt = "COMMAND_THAT_I_MADE_UP gotospace :i am a fucking astronaut\r\n";
+    let mut chinese_salt = "COMMAND_THAT_I_MADE_UP gotospace :i am a fucking astronaut\r\n";
     let mut param_array = [""; 14]; param_array[0] = "gotospace";
     assert_eq!((None, "COMMAND_THAT_I_MADE_UP", Some(param_array), Some(":i am a fucking astronaut")), whatitmean(chinese_salt).expect("Returned error from an acceptable state"));
+    chinese_salt = "NICK Zero\r\n";
+    param_array[0] = "Zero";
+    assert_eq!((None, "NICK", Some(param_array), None), whatitmean(chinese_salt).expect("Returned error from an acceptable state"));
+    chinese_salt = ":Zero!theintoner@castellum NICK the_greatest_intoner_of_all\r\n";
+    param_array[0] = "the_greatest_intoner_of_all";
+    assert_eq!((Some(":Zero!theintoner@castellum"), "NICK", Some(param_array), None), whatitmean(chinese_salt).expect("Returned error from an acceptable state"));
 }
