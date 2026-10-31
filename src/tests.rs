@@ -1,3 +1,6 @@
+use core::error;
+use std::io::{self, ErrorKind};
+
 use crate::*;
 
 #[test]
@@ -48,4 +51,11 @@ fn msg_prcss_test() {
     chinese_salt = ":Zero!theintoner@castellum NICK the_greatest_intoner_of_all\r\n";
     param_array[0] = "the_greatest_intoner_of_all";
     assert_eq!((Some(":Zero!theintoner@castellum"), "NICK", Some(param_array), None), whatitmean(chinese_salt).expect("Returned error from an acceptable state"));
+}
+
+#[test]
+fn logging_test() {
+    logit("anan", None).unwrap();
+    let whandle = logit(ErrorKind::HostUnreachable, None).unwrap();
+    logit(io::Error::new(ErrorKind::OutOfMemory, "bohohoyt"), Some(whandle)).unwrap();
 }

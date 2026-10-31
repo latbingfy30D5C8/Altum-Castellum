@@ -24,7 +24,7 @@ pub fn u8_to_hex(byte: u8) -> String {
     hex
 }
 
-// How To Use: Opens a new "log" file if never opened. Takes the ownership of the writer and gives you back. You can drop it to flush the logs manually.
+// How To Use: Give the message, if your first time give the handle None. Opens a new "log" file if never opened(handle = None). Takes the ownership of the writer and gives you back. You can drop it to flush the logs manually.
 pub fn logit(
     msg: impl Debug,
     handle: Option<BufWriter<File>>,
@@ -32,10 +32,10 @@ pub fn logit(
     if handle.is_none() {
         let fileus = File::options().append(true).create(true).open("log")?;
         let mut buffer = BufWriter::with_capacity(2173, fileus);
-        write!(&mut buffer, "{:?}", msg)?; // i regret write_all
+        writeln!(&mut buffer, "{:?}", msg)?; // i regret write_all
         return Ok(buffer);
     }
     let mut buffer = handle.unwrap(); // mysterious space rays can kiss my ass
-    write!(&mut buffer, "{:?}", msg)?;
+    writeln!(&mut buffer, "{:?}", msg)?;
     Ok(buffer)
 }
