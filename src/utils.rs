@@ -4,7 +4,7 @@ use std::{
     io::{self, BufWriter, Write},
 };
 
-mod message;
+pub mod message;
 
 pub fn u8_to_hex(byte: u8) -> String {
     let mut hex = String::new();

@@ -1,6 +1,7 @@
-use super::*;
+use crate::*;
 
 #[test]
+#[should_panic]
 fn hex_conv() {
     assert_eq!("0", u8_to_hex(0));
     assert_eq!("1f", u8_to_hex(31));
@@ -18,7 +19,6 @@ fn hex_conv() {
 }
 
 #[test]
-#[should_panic]
 fn hex_conv2() {
     assert_eq!("00", u8_to_hex(0));
     assert_eq!("1f", u8_to_hex(31));
@@ -33,4 +33,12 @@ fn socks5test() {
         "duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion:80",
     )
     .unwrap();
+}
+
+#[test]
+fn msg_prcss_test() {
+    use message::*;
+    let chinese_salt = "COMMAND_THAT_I_MADE_UP gotospace :i am a fucking astronaut\r\n";
+    let mut param_array = [""; 14]; param_array[0] = "gotospace";
+    assert_eq!((None, "COMMAND_THAT_I_MADE_UP", Some(param_array), Some(":i am a fucking astronaut")), whatitmean(chinese_salt).expect("Returned error from an acceptable state"));
 }
