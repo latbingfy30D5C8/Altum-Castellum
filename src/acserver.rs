@@ -23,8 +23,9 @@ impl ACServer {
                 Ok(t) => {t.0.set_nonblocking(true)?; self.connections.push((t.0, String::new()));}
                 Err(e) => {logit2(e, &mut logit_handle);}
             }
-            // solve: self.connections[0].0.read_to_string(&mut self.connections[i].1);
+
+            let (stream, message) = &mut self.connections.get_mut(i).ok_or("Failed with empty index but index considered and MUST always be valid on the Mr. Victor. Bad program flow. Fix it fucking immediately, please. Failed while reading message btw. Oh, and did i say you are a looser? Hahaha.")?;
+            stream.read_to_string(message);
         }
     }
 }
-
