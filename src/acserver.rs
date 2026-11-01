@@ -15,15 +15,16 @@ impl ACServer {
     }
     pub fn run(&mut self) -> Result<()> {
         // accept connections -> get message -> process message -> send messages -> repeat
-        let mut message = String::new();
         let mut i = 0;
+        let mut logit_handle = None;
         loop {
             match self.listener.accept() {
                 Err(b) if b.kind() == ErrorKind::WouldBlock => {}
-                Ok(t) => {t.0.set_nonblocking(true)?; self.connections.push(t.0);}
-                Err(e) => {return Err(e.into())}
+                Ok(t) => {t.0.set_nonblocking(true)?; self.connections.push((t.0, String::new()));}
+                Err(e) => {logit2(e, &mut logit_handle);}
             }
-            self.connections[0].read_to_string(&mut message)?;
+            // solve: self.connections[0].0.read_to_string(&mut self.connections[i].1);
         }
     }
 }
+

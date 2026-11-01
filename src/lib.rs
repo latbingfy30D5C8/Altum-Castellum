@@ -27,5 +27,5 @@ pub struct ACClient {
 
 pub struct ACServer {
     listener: TcpListener,
-    connections: Vec<TcpStream>,
+    connections: Vec<(TcpStream, String)>,
 }

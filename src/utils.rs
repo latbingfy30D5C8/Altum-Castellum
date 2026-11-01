@@ -24,6 +24,7 @@ pub fn u8_to_hex(byte: u8) -> String {
     hex
 }
 
+// use the logit2, this sucks
 // How To Use: Give the message, if your first time give the handle None. Opens a new "log" file if never opened(handle = None). Takes the ownership of the writer and gives you back. You can drop it to flush the logs manually.
 pub fn logit(
     msg: impl Debug,
@@ -39,3 +40,19 @@ pub fn logit(
     writeln!(&mut buffer, "{:?}", msg)?;
     Ok(buffer)
 }
+
+pub fn logit2(msg: impl Debug, handle: &mut Option<BufWriter<File>>,) -> io::Result<()>{
+    match handle {
+        Some(h) => {
+            writeln!(h, "{:?}", msg)?;
+            return Ok(());
+        }
+        None => {
+            let fileus = File::options().append(true).create(true).open("log")?;
+            let mut buffer = BufWriter::with_capacity(2173, fileus);
+            writeln!(&mut buffer, "{:?}", msg)?; // i regret write_all, still
+            *handle = Some(buffer);
+            return Ok(());
+        }
+    }
+} 
