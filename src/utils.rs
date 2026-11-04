@@ -25,7 +25,7 @@ pub fn u8_to_hex(byte: u8) -> String {
 }
 
 // use the logit2, this sucks
-// How To Use: Give the message, if your first time give the handle None. Opens a new "log" file if never opened(handle = None). Takes the ownership of the writer and gives you back. You can drop it to flush the logs manually.
+// How To Use: Give the message and if your first time give the handle None. Opens a new "log" file if never opened(handle = None). Takes the ownership of the writer and gives you back. You can drop handle to flush the logs manually.
 pub fn logit(
     msg: impl Debug,
     handle: Option<BufWriter<File>>,
@@ -41,7 +41,7 @@ pub fn logit(
     Ok(buffer)
 }
 
-pub fn logit2(msg: impl Debug, handle: &mut Option<BufWriter<File>>,) -> io::Result<()>{
+pub fn logit2(msg: impl Debug, handle: &mut Option<BufWriter<File>>) -> io::Result<()> {
     match handle {
         Some(h) => {
             writeln!(h, "{:?}", msg)?;
@@ -55,4 +55,5 @@ pub fn logit2(msg: impl Debug, handle: &mut Option<BufWriter<File>>,) -> io::Res
             return Ok(());
         }
     }
-} 
+}
+// actually a trait version of logit can be more comfortable

@@ -1,6 +1,9 @@
 // running the tor daemon is your responsibility
-use crate::{message::whatitmean_once, *};
-use std::{io::{ErrorKind, Read}, net::TcpListener};
+use crate::*;
+use std::{
+    io::{ErrorKind, Read},
+    net::TcpListener,
+};
 
 const BINDING_ADDR: &str = "127.0.0.1:9050"; // change it if you want
 
@@ -20,12 +23,19 @@ impl ACServer {
         loop {
             match self.listener.accept() {
                 Err(b) if b.kind() == ErrorKind::WouldBlock => {}
-                Ok(t) => {t.0.set_nonblocking(true)?; self.connections.push((t.0, String::new()));}
-                Err(e) => {logit2(e, &mut logit_handle);}
+                Ok(t) => {
+                    t.0.set_nonblocking(true)?;
+                    self.connections.push((t.0, String::new()));
+                }
+                Err(e) => {
+                    let _ = logit2(e, &mut logit_handle);
+                }
             }
 
             let (stream, message) = &mut self.connections.get_mut(i).ok_or("Failed with empty index but index considered and MUST always be valid on the Mr. Victor. Bad program flow. Fix it fucking immediately, please. Failed while reading message btw. Oh, and did i say you are a looser? Hahaha.")?;
             stream.read_to_string(message);
+
+            
         }
     }
 }

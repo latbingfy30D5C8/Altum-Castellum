@@ -1,4 +1,3 @@
-use core::error;
 use std::io::{self, ErrorKind};
 
 use crate::*;
@@ -42,20 +41,58 @@ fn socks5test() {
 #[test]
 fn msg_prcss_test() {
     use message::*;
-    let mut chinese_salt = "COMMAND_THAT_I_MADE_UP gotospace :i am a fucking astronaut\r\n";
-    let mut param_array = [""; 14]; param_array[0] = "gotospace";
-    assert_eq!((None, "COMMAND_THAT_I_MADE_UP", Some(param_array), Some(":i am a fucking astronaut")), whatitmean(chinese_salt).expect("Returned error from an acceptable state"));
-    chinese_salt = "NICK Zero\r\n";
+    let chinese_salt = "COMMAND_THAT_I_MADE_UP gotospace :i am a fucking astronaut\r\n";
+    let mut param_array = [""; 14];
+    param_array[0] = "gotospace";
+    let irc_msg = IRCMessage {
+        prefix: None,
+        command: "COMMAND_THAT_I_MADE_UP",
+        params: Some(param_array),
+        trailing: Some(":i am a fucking astronaut"),
+    };
+    assert_eq!(
+        irc_msg,
+        whatitmean(chinese_salt).expect("Returned error from an acceptable state")
+    );
+    let chinese_salt = "NICK Zero\r\n";
     param_array[0] = "Zero";
-    assert_eq!((None, "NICK", Some(param_array), None), whatitmean(chinese_salt).expect("Returned error from an acceptable state"));
-    chinese_salt = ":Zero!theintoner@castellum NICK the_greatest_intoner_of_all\r\n";
+    let irc_msg = IRCMessage {
+        prefix: None,
+        command: "NICK",
+        params: Some(param_array),
+        trailing: None,
+    };
+    assert_eq!(
+        irc_msg,
+        whatitmean(chinese_salt).expect("Returned error from an acceptable state")
+    );
+    let chinese_salt = ":Zero!theintoner@castellum NICK the_greatest_intoner_of_all\r\n";
     param_array[0] = "the_greatest_intoner_of_all";
-    assert_eq!((Some(":Zero!theintoner@castellum"), "NICK", Some(param_array), None), whatitmean(chinese_salt).expect("Returned error from an acceptable state"));
+    let irc_msg = IRCMessage {
+        prefix: Some(":Zero!theintoner@castellum"),
+        command: "NICK",
+        params: Some(param_array),
+        trailing: None,
+    };
+    assert_eq!(
+        irc_msg,
+        whatitmean(chinese_salt).expect("Returned error from an acceptable state")
+    );
 }
 
 #[test]
 fn logging_test() {
     logit("anan", None).unwrap();
     let whandle = logit(ErrorKind::HostUnreachable, None).unwrap();
-    logit(io::Error::new(ErrorKind::OutOfMemory, "bohohoyt"), Some(whandle)).unwrap();
+    logit(
+        io::Error::new(ErrorKind::OutOfMemory, "bohohoyt"),
+        Some(whandle),
+    )
+    .unwrap();
+}
+#[test]
+fn logit2_test() {
+    let mut buffer = None;
+    logit2("ğğğ", &mut buffer).unwrap();
+    logit2("boing", &mut buffer).unwrap();
 }
